@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DHM — Dirt Hunter Molecules (Full Site Preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   DHM — Dirt Hunter Molecules
+   Design tokens
+   ========================================================= */
+:root{
+  --ink:        #0B3D3A;   /* primary — deep petrol */
+  --ink-2:      #146661;   /* mid petrol */
+  --ink-3:      #0E2B29;   /* darkest, for footer/header overlay */
+  --accent:     #F4B400;   /* hazard yellow */
+  --accent-2:   #D99400;   /* deeper yellow for hover */
+  --paper:      #F7F5EF;   /* warm paper background */
+  --paper-2:    #EFEBE0;   /* slightly deeper paper for stripes */
+  --card:       #FFFFFF;
+  --line:       #D8D2C2;
+  --text:       #1C2422;
+  --text-soft:  #4A5550;
+  --text-faint: #7B8480;
+  --radius:     2px;       /* sharp, label-like, not "rounded cards" default */
+  --radius-lg:  4px;
+  --maxw:       1180px;
+
+  --font-display: "Space Grotesk", "Arial Narrow", sans-serif;
+  --font-body:    "Inter", -apple-system, sans-serif;
+  --font-mono:    "IBM Plex Mono", "Courier New", monospace;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--text);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+ul{ margin:0; padding:0; list-style:none; }
+h1,h2,h3,h4{ font-family:var(--font-display); margin:0 0 .5em; letter-spacing:-0.01em; color:var(--ink-3); }
+p{ margin:0 0 1em; color:var(--text-soft); }
+button{ font-family:inherit; cursor:pointer; }
+
+:focus-visible{
+  outline:3px solid var(--accent);
+  outline-offset:2px;
+}
+
+.container{
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding:0 28px;
+}
+
+/* ---------- Eyebrow / spec-label signature device ---------- */
+.spec{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:14px;
+}
+.spec::before{
+  content:"";
+  width:18px; height:2px;
+  background:var(--accent);
+  display:inline-block;
+}
+.spec.on-dark{ color:var(--accent); }
+.spec.on-dark::before{ background:var(--accent); }
+
+/* ---------- Header ---------- */
+.site-header{
+  position:sticky; top:0; z-index:100;
+  background:rgba(247,245,239,.92);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 28px;
+  max-width:var(--maxw); margin:0 auto;
+}
+.logo{
+  display:flex; align-items:center; gap:10px;
+  font-family:var(--font-display); font-weight:700; font-size:19px;
+  color:var(--ink);
+}
+.logo .mark{
+  width:34px; height:34px;
+  background:var(--ink);
+  position:relative;
+  display:flex; align-items:center; justify-content:center;
+  clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
+}
+.logo .mark span{
+  color:var(--accent); font-family:var(--font-mono); font-weight:700; font-size:15px;
+}
+.logo small{
+  display:block; font-family:var(--font-mono); font-weight:400;
+  font-size:9.5px; letter-spacing:.1em; color:var(--text-faint); text-transform:uppercase;
+}
+
+.nav-main{ display:flex; align-items:center; gap:30px; }
+.nav-main a{
+  font-size:14.5px; font-weight:500; color:var(--text);
+  padding:6px 0; position:relative;
+}
+.nav-main a::after{
+  content:""; position:absolute; left:0; right:100%; bottom:0; height:2px; background:var(--accent);
+  transition:right .2s ease;
+}
+.nav-main a:hover::after, .nav-main a.active::after{ right:0; }
+.nav-main a.active{ color:var(--ink); }
+
+.header-cta{ display:flex; align-items:center; gap:12px; }
+
+.btn{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-body); font-weight:600; font-size:14px;
+  padding:11px 22px; border:1px solid transparent;
+  border-radius:var(--radius); cursor:pointer; white-space:nowrap;
+}
+.btn-primary{ background:var(--ink); color:#fff; }
+.btn-primary:hover{ background:var(--ink-2); }
+.btn-accent{ background:var(--accent); color:var(--ink-3); }
+.btn-accent:hover{ background:var(--accent-2); }
+.btn-outline{ background:transparent; border-color:var(--ink); color:var(--ink); }
+.btn-outline:hover{ background:var(--ink); color:#fff; }
+.btn-outline.on-dark{ border-color:rgba(255,255,255,.5); color:#fff; }
+.btn-outline.on-dark:hover{ background:#fff; color:var(--ink-3); border-color:#fff; }
+.btn-sm{ padding:8px 16px; font-size:13px; }
+
+.nav-toggle{ display:none; }
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;
+  background:var(--ink-3);
+  color:#fff;
+  overflow:hidden;
+  padding:96px 0 110px;
+}
+.hero::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(115deg, rgba(244,180,0,.05) 0 2px, transparent 2px 64px),
+    radial-gradient(ellipse at 80% 20%, rgba(20,102,97,.55), transparent 60%);
+  pointer-events:none;
+}
+.hero-inner{ position:relative; max-width:720px; }
+.hero h1{
+  color:#fff; font-size:clamp(32px,5vw,54px); line-height:1.08; margin-bottom:20px;
+}
+.hero h1 em{ font-style:normal; color:var(--accent); }
+.hero p.lede{ color:rgba(255,255,255,.78); font-size:17px; max-width:540px; }
+.hero-actions{ display:flex; gap:14px; margin-top:30px; flex-wrap:wrap; }
+.hero-tape{
+  position:absolute; right:-10px; bottom:-10px;
+  font-family:var(--font-mono); font-size:11px; color:rgba(255,255,255,.35);
+  letter-spacing:.15em; writing-mode:vertical-rl; transform:rotate(180deg);
+  display:flex; gap:18px;
+}
+.hero-banner-sub{
+  background:var(--ink); border-top:1px solid rgba(255,255,255,.1);
+  padding:18px 0;
+}
+.hero-stats{ display:flex; gap:0; flex-wrap:wrap; }
+.hero-stats div{
+  flex:1; min-width:140px; padding:0 24px; border-left:1px solid rgba(255,255,255,.15);
+  font-family:var(--font-mono); color:rgba(255,255,255,.85);
+}
+.hero-stats div:first-child{ border-left:none; padding-left:0; }
+.hero-stats b{ display:block; color:var(--accent); font-size:22px; font-family:var(--font-display); }
+.hero-stats span{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.55); }
+
+/* page banners (sub-pages) */
+.page-banner{
+  background:var(--ink-3); color:#fff; padding:64px 0 50px; position:relative; overflow:hidden;
+}
+.page-banner::before{
+  content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(115deg, rgba(244,180,0,.05) 0 2px, transparent 2px 64px);
+}
+.page-banner .container{ position:relative; }
+.crumb{ font-family:var(--font-mono); font-size:12px; color:rgba(255,255,255,.5); margin-bottom:10px; }
+.crumb b{ color:var(--accent); }
+.page-banner h1{ color:#fff; font-size:clamp(28px,4vw,42px); margin-bottom:8px; }
+.page-banner p{ color:rgba(255,255,255,.7); max-width:560px; margin:0; }
+
+/* ---------- Sections ---------- */
+section{ padding:84px 0; }
+.section-alt{ background:var(--paper-2); }
+.section-dark{ background:var(--ink-3); color:#fff; }
+.section-dark h2, .section-dark h3{ color:#fff; }
+.section-dark p{ color:rgba(255,255,255,.7); }
+
+.section-head{ max-width:620px; margin-bottom:48px; }
+.section-head.center{ margin-left:auto; margin-right:auto; text-align:center; }
+.section-head h2{ font-size:clamp(24px,3.4vw,34px); }
+
+/* ---------- About preview / split ---------- */
+.split{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:56px; align-items:center; }
+.split.reverse{ grid-template-columns:1.15fr 0.85fr; }
+.split.reverse .split-media{ order:2; }
+
+.split-media{
+  background:var(--ink);
+  aspect-ratio:4/3.1;
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--ink-3);
+}
+.split-media .drum{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(165deg, var(--ink-2) 0%, var(--ink) 60%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.03) 0 1px, transparent 1px 26px);
+  display:flex; align-items:flex-end; padding:22px;
+}
+.split-media .drum .label{
+  background:var(--paper); padding:14px 16px; width:100%;
+  border-left:4px solid var(--accent);
+  font-family:var(--font-mono);
+}
+.split-media .drum .label b{ display:block; font-family:var(--font-display); font-size:15px; color:var(--ink-3); }
+.split-media .drum .label span{ font-size:10.5px; color:var(--text-faint); letter-spacing:.05em; }
+
+.checklist{ margin-top:18px; }
+.checklist li{
+  display:flex; gap:12px; padding:9px 0; border-top:1px solid var(--line);
+  color:var(--text-soft); font-size:15px;
+}
+.checklist li:first-child{ border-top:none; }
+.checklist .tick{
+  flex:0 0 auto; width:20px; height:20px; background:var(--ink); color:var(--accent);
+  display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;
+  border-radius:50%;
+}
+
+/* ---------- Category cards ---------- */
+.grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+.grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+.grid-2{ display:grid; grid-template-columns:repeat(2,1fr); gap:26px; }
+
+.cat-card{
+  background:var(--card); border:1px solid var(--line);
+  padding:0; position:relative; transition:transform .18s ease, box-shadow .18s ease;
+  display:flex; flex-direction:column;
+}
+.cat-card:hover{ transform:translateY(-4px); box-shadow:0 18px 30px -18px rgba(11,61,58,.35); }
+.cat-card .swatch{
+  height:120px; background:var(--ink); position:relative;
+  display:flex; align-items:flex-end; justify-content:flex-start; padding:14px;
+}
+.cat-card .swatch .num{
+  font-family:var(--font-mono); color:rgba(255,255,255,.4); font-size:12px; letter-spacing:.1em;
+}
+.cat-card .swatch svg{ position:absolute; top:16px; right:16px; width:30px; height:30px; stroke:var(--accent); }
+.cat-card .body{ padding:22px; flex:1; display:flex; flex-direction:column; }
+.cat-card h3{ font-size:18px; margin-bottom:8px; }
+.cat-card p{ font-size:14px; margin-bottom:16px; flex:1; }
+.cat-card .arrow-link{ font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:var(--ink); letter-spacing:.04em; text-transform:uppercase; }
+.cat-card .arrow-link:hover{ color:var(--ink-2); }
+
+/* ---------- Why choose / value props ---------- */
+.value-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+.value-cell{ background:var(--paper); padding:32px 26px; }
+.value-cell .ico{
+  width:38px; height:38px; margin-bottom:16px; stroke:var(--ink); fill:none; stroke-width:1.6;
+}
+.value-cell h4{ font-size:16px; margin-bottom:6px; }
+.value-cell p{ font-size:14px; margin:0; }
+
+/* ---------- Product cards ---------- */
+.product-card{
+  background:var(--card); border:1px solid var(--line); display:flex; flex-direction:column;
+  transition:box-shadow .18s ease;
+}
+.product-card:hover{ box-shadow:0 18px 30px -20px rgba(11,61,58,.4); }
+.product-card .shot{
+  height:150px; background:linear-gradient(160deg,var(--ink-2),var(--ink));
+  position:relative; display:flex; align-items:center; justify-content:center;
+}
+.product-card .shot .bottle{
+  width:46px; height:90px; background:rgba(255,255,255,.92); border-radius:6px 6px 3px 3px; position:relative;
+}
+.product-card .shot .bottle::before{
+  content:""; position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+  width:16px; height:12px; background:rgba(255,255,255,.92); border-radius:2px 2px 0 0;
+}
+.product-card .shot .bottle::after{
+  content:""; position:absolute; left:6px; right:6px; top:28px; bottom:18px; background:var(--accent); opacity:.85;
+}
+.product-card .shot .tag{
+  position:absolute; top:10px; left:10px; font-family:var(--font-mono); font-size:10px; color:rgba(255,255,255,.55); letter-spacing:.08em;
+}
+.product-card .body{ padding:20px 20px 22px; flex:1; display:flex; flex-direction:column; }
+.product-card .cat-tag{ font-family:var(--font-mono); font-size:10.5px; color:var(--ink-2); letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px; }
+.product-card h3{ font-size:17px; margin-bottom:6px; }
+.product-card p{ font-size:13.5px; flex:1; margin-bottom:16px; }
+.product-card .card-foot{ display:flex; align-items:center; justify-content:space-between; }
+
+/* ---------- Testimonials ---------- */
+.testi-track{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+.testi-card{ background:var(--card); border:1px solid var(--line); padding:28px; position:relative; }
+.testi-card .quote-mark{ font-family:var(--font-display); font-size:46px; color:var(--accent); line-height:.5; display:block; margin-bottom:14px; }
+.testi-card p{ font-size:14.5px; color:var(--text-soft); margin-bottom:18px; }
+.testi-card .who{ font-family:var(--font-mono); font-size:12px; color:var(--ink-2); letter-spacing:.04em; }
+.testi-card .who b{ display:block; color:var(--ink-3); font-family:var(--font-body); font-size:14px; }
+
+/* ---------- Industries ---------- */
+.industry-row{ display:flex; flex-wrap:wrap; gap:14px; }
+.industry-chip{
+  flex:1; min-width:150px; background:var(--card); border:1px solid var(--line);
+  padding:22px 18px; text-align:center;
+}
+.industry-chip .ico{ width:30px; height:30px; margin:0 auto 12px; stroke:var(--ink); fill:none; stroke-width:1.6; }
+.industry-chip span{ font-size:13.5px; font-weight:600; color:var(--ink-3); }
+
+/* ---------- CTA banner ---------- */
+.cta-band{
+  background:var(--ink); color:#fff; padding:52px 0; position:relative; overflow:hidden;
+}
+.cta-band::before{
+  content:""; position:absolute; inset:0;
+  background:repeating-linear-gradient(115deg, rgba(244,180,0,.06) 0 2px, transparent 2px 64px);
+}
+.cta-band .container{ position:relative; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; }
+.cta-band h3{ color:#fff; font-size:24px; margin-bottom:4px; }
+.cta-band p{ color:rgba(255,255,255,.7); margin:0; }
+.cta-actions{ display:flex; gap:12px; flex-wrap:wrap; }
+
+/* ---------- Values / mission-vision (about) ---------- */
+.mv-grid{ display:grid; grid-template-columns:1fr 1fr; gap:26px; }
+.mv-card{ background:var(--ink-3); color:#fff; padding:36px 32px; position:relative; }
+.mv-card .spec{ color:var(--accent); }
+.mv-card.alt{ background:var(--ink-2); }
+.mv-card p.statement{ font-family:var(--font-display); font-size:21px; color:#fff; line-height:1.4; margin:0; }
+
+.values-list{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+.value-card{ border:1px solid var(--line); padding:24px 20px; background:var(--card); }
+.value-card .vnum{ font-family:var(--font-mono); color:var(--accent-2); font-size:12px; display:block; margin-bottom:14px; }
+.value-card h4{ font-size:16px; margin-bottom:8px; }
+.value-card p{ font-size:13.5px; margin:0; }
+
+.cert-row{ display:flex; gap:20px; flex-wrap:wrap; }
+.cert-badge{
+  flex:1; min-width:150px; border:1px dashed var(--line); padding:24px 16px; text-align:center; background:var(--paper);
+}
+.cert-badge .ico{ width:34px; height:34px; margin:0 auto 10px; stroke:var(--ink-2); fill:none; stroke-width:1.5; }
+.cert-badge span{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:.05em; color:var(--text-soft); }
+
+/* ---------- Product listing / filter ---------- */
+.filter-bar{
+  display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  background:var(--card); border:1px solid var(--line); padding:18px 22px; margin-bottom:36px;
+}
+.search-box{
+  flex:1; min-width:220px; display:flex; align-items:center; gap:10px;
+  border:1px solid var(--line); padding:10px 14px; background:var(--paper);
+}
+.search-box input{
+  border:none; background:transparent; outline:none; width:100%; font-family:var(--font-body); font-size:14px; color:var(--text);
+}
+.search-box svg{ width:16px; height:16px; stroke:var(--text-faint); fill:none; flex:0 0 auto; }
+.filter-tabs{ display:flex; gap:8px; flex-wrap:wrap; }
+.filter-tabs button{
+  border:1px solid var(--line); background:transparent; padding:9px 16px; font-size:13px; font-weight:600;
+  color:var(--text-soft); border-radius:var(--radius);
+}
+.filter-tabs button.active{ background:var(--ink); border-color:var(--ink); color:#fff; }
+.filter-tabs button:hover:not(.active){ border-color:var(--ink-2); color:var(--ink-2); }
+
+.empty-state{
+  text-align:center; padding:60px 20px; border:1px dashed var(--line); display:none;
+}
+.empty-state.show{ display:block; }
+.empty-state .spec{ justify-content:center; }
+
+/* ---------- Product detail (modal) ---------- */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(11,43,41,.7); display:none;
+  align-items:flex-start; justify-content:center; z-index:1000; padding:40px 20px; overflow-y:auto;
+}
+.modal-overlay.open{ display:flex; }
+.modal{
+  background:var(--paper); max-width:880px; width:100%; position:relative; border:1px solid var(--line);
+  margin-top:20px;
+}
+.modal-close{
+  position:absolute; top:14px; right:14px; width:34px; height:34px; background:var(--ink);
+  color:#fff; border:none; font-size:18px; display:flex; align-items:center; justify-content:center; z-index:2;
+}
+.modal-close:hover{ background:var(--ink-2); }
+.modal-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; }
+.modal-shot{ background:linear-gradient(160deg,var(--ink-2),var(--ink)); min-height:260px; display:flex; align-items:center; justify-content:center; }
+.modal-shot .bottle{ width:70px; height:140px; background:rgba(255,255,255,.92); border-radius:8px 8px 4px 4px; position:relative; }
+.modal-shot .bottle::before{ content:""; position:absolute; top:-14px; left:50%; transform:translateX(-50%); width:22px; height:16px; background:rgba(255,255,255,.92); border-radius:3px 3px 0 0; }
+.modal-shot .bottle::after{ content:""; position:absolute; left:8px; right:8px; top:40px; bottom:24px; background:var(--accent); opacity:.85; }
+.modal-body{ padding:32px; }
+.modal-body .cat-tag{ font-family:var(--font-mono); font-size:11px; color:var(--ink-2); letter-spacing:.08em; text-transform:uppercase; }
+.modal-body h2{ font-size:24px; margin:6px 0 14px; }
+.modal-section{ margin-bottom:18px; }
+.modal-section h5{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); margin:0 0 8px; }
+.modal-section ul li{ position:relative; padding-left:18px; font-size:14px; color:var(--text-soft); margin-bottom:6px; }
+.modal-section ul li::before{ content:"✓"; position:absolute; left:0; color:var(--ink-2); font-weight:700; }
+.modal-actions{ display:flex; gap:12px; margin-top:22px; flex-wrap:wrap; }
+
+/* ---------- Contact page ---------- */
+.contact-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:48px; align-items:start; }
+.info-card{ background:var(--ink-3); color:#fff; padding:34px; margin-bottom:20px; }
+.info-card h3{ color:#fff; }
+.info-row{ display:flex; gap:14px; padding:14px 0; border-top:1px solid rgba(255,255,255,.12); }
+.info-row:first-of-type{ border-top:1px solid rgba(255,255,255,.12); margin-top:8px; }
+.info-row .ico{ width:20px; height:20px; stroke:var(--accent); fill:none; flex:0 0 auto; margin-top:2px; }
+.info-row b{ display:block; font-size:14.5px; color:#fff; }
+.info-row span{ font-size:13.5px; color:rgba(255,255,255,.65); }
+.social-row{ display:flex; gap:10px; margin-top:18px; }
+.social-row a{
+  width:36px; height:36px; border:1px solid rgba(255,255,255,.25); display:flex; align-items:center; justify-content:center;
+}
+.social-row a:hover{ background:var(--accent); border-color:var(--accent); }
+.social-row svg{ width:16px; height:16px; stroke:#fff; fill:none; }
+.social-row a:hover svg{ stroke:var(--ink-3); }
+
+.map-box{
+  background:var(--card); border:1px solid var(--line); height:230px; position:relative; overflow:hidden;
+}
+.map-box .grid-lines{
+  position:absolute; inset:0;
+  background:
+    repeating-linear-gradient(0deg, var(--paper-2) 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(90deg, var(--paper-2) 0 1px, transparent 1px 30px);
+}
+.map-box .pin{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-100%);
+  width:30px; height:30px; background:var(--accent); border-radius:50% 50% 50% 0; transform:translate(-50%,-100%) rotate(-45deg);
+  display:flex; align-items:center; justify-content:center;
+}
+.map-box .pin::after{ content:""; width:10px; height:10px; background:var(--ink-3); border-radius:50%; transform:rotate(45deg); }
+.map-box .cap{ position:absolute; bottom:10px; left:10px; font-family:var(--font-mono); font-size:11px; background:#fff; padding:6px 10px; border:1px solid var(--line); }
+
+form{ background:var(--card); border:1px solid var(--line); padding:32px; }
+.form-row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+.field{ display:flex; flex-direction:column; gap:6px; }
+.field.full{ grid-column:1/-1; }
+.field label{ font-size:12.5px; font-weight:600; color:var(--ink-3); letter-spacing:.02em; }
+.field input, .field select, .field textarea{
+  border:1px solid var(--line); background:var(--paper); padding:11px 13px; font-family:var(--font-body);
+  font-size:14.5px; color:var(--text); outline:none;
+}
+.field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--ink-2); }
+.field textarea{ resize:vertical; min-height:110px; }
+.form-note{ font-size:12px; color:var(--text-faint); margin-top:14px; }
+.form-success{
+  display:none; align-items:center; gap:10px; background:#EFF7F2; border:1px solid #BFE3CE; color:#1F5F3C;
+  padding:14px 16px; font-size:14px; margin-bottom:18px;
+}
+.form-success.show{ display:flex; }
+
+/* FAQ */
+.faq-item{ border-bottom:1px solid var(--line); }
+.faq-q{
+  width:100%; text-align:left; background:transparent; border:none; padding:20px 0;
+  display:flex; align-items:center; justify-content:space-between; font-family:var(--font-display);
+  font-size:16px; color:var(--ink-3);
+}
+.faq-q .plus{ font-family:var(--font-mono); font-size:18px; color:var(--ink-2); transition:transform .2s ease; }
+.faq-item.open .faq-q .plus{ transform:rotate(45deg); }
+.faq-a{ max-height:0; overflow:hidden; transition:max-height .25s ease; }
+.faq-item.open .faq-a{ max-height:200px; }
+.faq-a p{ padding-bottom:18px; margin:0; font-size:14.5px; }
+
+/* ---------- Footer ---------- */
+.site-footer{ background:var(--ink-3); color:rgba(255,255,255,.7); padding:60px 0 0; }
+.footer-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr 1.2fr; gap:36px; padding-bottom:40px; }
+.footer-grid h5{ color:#fff; font-family:var(--font-mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:18px; }
+.footer-grid li{ margin-bottom:10px; font-size:14px; }
+.footer-grid a:hover{ color:var(--accent); }
+.footer-about p{ color:rgba(255,255,255,.6); font-size:14px; max-width:280px; }
+.footer-logo{ display:flex; align-items:center; gap:10px; margin-bottom:16px; font-family:var(--font-display); font-weight:700; color:#fff; font-size:18px; }
+.newsletter{ display:flex; border:1px solid rgba(255,255,255,.25); }
+.newsletter input{ flex:1; background:transparent; border:none; padding:11px 13px; color:#fff; font-family:var(--font-body); outline:none; }
+.newsletter input::placeholder{ color:rgba(255,255,255,.4); }
+.newsletter button{ background:var(--accent); color:var(--ink-3); border:none; padding:0 18px; font-weight:700; }
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.12); padding:20px 0; display:flex; justify-content:space-between;
+  font-size:12.5px; color:rgba(255,255,255,.45); flex-wrap:wrap; gap:10px;
+}
+
+/* ---------- Misc ---------- */
+.center-cta{ text-align:center; margin-top:40px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width:980px){
+  .grid-4{ grid-template-columns:repeat(2,1fr); }
+  .grid-3{ grid-template-columns:repeat(2,1fr); }
+  .value-grid{ grid-template-columns:repeat(2,1fr); }
+  .values-list{ grid-template-columns:repeat(2,1fr); }
+  .testi-track{ grid-template-columns:1fr; }
+  .split, .split.reverse{ grid-template-columns:1fr; }
+  .split.reverse .split-media{ order:0; }
+  .contact-grid{ grid-template-columns:1fr; }
+  .modal-grid{ grid-template-columns:1fr; }
+  .footer-grid{ grid-template-columns:1fr 1fr; }
+  .mv-grid{ grid-template-columns:1fr; }
+}
+@media (max-width:760px){
+  .nav-main{
+    position:fixed; top:69px; left:0; right:0; bottom:0; background:var(--paper);
+    flex-direction:column; align-items:flex-start; padding:30px 28px; gap:6px;
+    transform:translateX(-100%); transition:transform .25s ease; overflow-y:auto;
+  }
+  .nav-main.open{ transform:translateX(0); }
+  .nav-main a{ width:100%; padding:14px 0; border-bottom:1px solid var(--line); font-size:16px; }
+  .nav-toggle{
+    display:flex; flex-direction:column; gap:5px; background:transparent; border:none; padding:8px;
+  }
+  .nav-toggle span{ width:22px; height:2px; background:var(--ink); display:block; }
+  .header-cta .btn-outline{ display:none; }
+  .grid-4, .grid-3, .grid-2, .value-grid, .values-list{ grid-template-columns:1fr; }
+  .form-row{ grid-template-columns:1fr; }
+  .hero-stats{ flex-direction:column; }
+  .hero-stats div{ border-left:none; border-top:1px solid rgba(255,255,255,.15); padding:14px 0; }
+  .hero-stats div:first-child{ border-top:none; }
+  .footer-grid{ grid-template-columns:1fr; }
+  .cta-band .container{ flex-direction:column; text-align:center; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="page-root" data-page="home" style="display:block">
+
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <span class="mark"><span>DH</span></span>
+      <span>DHM<small>Dirt Hunter Molecules</small></span>
+    </a>
+    <nav class="nav-main">
+      <a href="index.html" class="active">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="products.html">Products</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="header-cta">
+      <a href="tel:+918489884898" class="btn btn-outline btn-sm">Call Us</a>
+      <a href="contact.html" class="btn btn-accent btn-sm">Download Brochure</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-inner">
+    <p class="spec on-dark">Manufacturing since 1996 · Coimbatore, India</p>
+    <h1>Hospital hygiene and laundry solutions, <em>formulated to hold up</em>.</h1>
+    <p class="lede">DHM develops disinfectants, laundry chemicals and housekeeping solutions built for the wards, kitchens and laundries that can't afford to slow down.</p>
+    <div class="hero-actions">
+      <a href="products.html" class="btn btn-accent">Explore Products</a>
+      <a href="contact.html" class="btn btn-outline on-dark">Contact Us</a>
+    </div>
+  </div>
+  <div class="hero-tape">REF · DHM-1996 — SAFETY FIRST — FORMULATED IN-HOUSE</div>
+</section>
+<div class="hero-banner-sub">
+  <div class="container hero-stats">
+    <div><b>1996</b><span>Year established</span></div>
+    <div><b>30+</b><span>Active formulations</span></div>
+    <div><b>500+</b><span>Institutions served</span></div>
+    <div><b>3</b><span>Core product lines</span></div>
+  </div>
+</div>
+
+<section>
+  <div class="container split">
+    <div class="split-media">
+      <div class="drum">
+        <div class="label"><b>About DHM</b><span>Manufactured in Coimbatore, Tamil Nadu</span></div>
+      </div>
+    </div>
+    <div>
+      <p class="spec">About DHM</p>
+      <h2>Built around one motto: customer satisfaction.</h2>
+      <p>Dirt Hunter Molecules has spent close to three decades formulating hygiene and cleaning products for hospitals, hotels and industries that need consistency batch after batch. Every formulation is tested for performance before it reaches a wash bay or ward.</p>
+      <a href="about.html" class="btn btn-primary">Read More</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="container">
+    <div class="section-head">
+      <p class="spec">Product Categories</p>
+      <h2>Three lines, one quality standard.</h2>
+    </div>
+    <div class="grid-3">
+      <div class="cat-card">
+        <div class="swatch"><span class="num">01 / HYGIENE</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2l7 4v6c0 5-3 8-7 10-4-2-7-5-7-10V6l7-4z"/></svg>
+        </div>
+        <div class="body">
+          <h3>Hospital Hygiene</h3>
+          <p>Surgical hand wash, sanitizers and surface disinfectants for clinical environments.</p>
+          <a href="products.html?cat=hospital" class="arrow-link">View Products →</a>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="swatch"><span class="num">02 / LAUNDRY</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="13" r="6"/><circle cx="12" cy="13" r="2.4"/><path d="M5 5h2M16 5h2"/></svg>
+        </div>
+        <div class="body">
+          <h3>Laundry Solutions</h3>
+          <p>Ever White, Eco Soft and Chem Master for commercial linen care at scale.</p>
+          <a href="products.html?cat=laundry" class="arrow-link">View Products →</a>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="swatch"><span class="num">03 / HOUSEKEEPING</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 20l6-14h4l6 14"/><path d="M8 14h8"/></svg>
+        </div>
+        <div class="body">
+          <h3>Housekeeping Solutions</h3>
+          <p>RID floor cleaner, Wealth polish and surface care for large facilities.</p>
+          <a href="products.html?cat=housekeeping" class="arrow-link">View Products →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <p class="spec">Why Choose DHM</p>
+      <h2>Formulated for the people who use it every shift.</h2>
+    </div>
+    <div class="value-grid">
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        <h4>Professional formulations</h4>
+        <p>Developed and tested for consistent results across high-volume use.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s-7-4.35-7-10a7 7 0 0114 0c0 5.65-7 10-7 10z"/></svg>
+        <h4>Skin-friendly products</h4>
+        <p>Dermatologically considered formulas for repeated daily handling.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>
+        <h4>Quality assurance</h4>
+        <p>Every batch checked against fixed specifications before dispatch.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg>
+        <h4>Safety standards</h4>
+        <p>MSDS documentation and clear directions for every product we ship.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11z"/></svg>
+        <h4>Sustainable solutions</h4>
+        <p>Biodegradable formulations wherever performance allows it.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4V4z"/></svg>
+        <h4>Technical support</h4>
+        <p>Dosage guidance and on-site support for procurement teams.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="container">
+    <div class="section-head">
+      <p class="spec">Featured Products</p>
+      <h2>A look at what's on the line right now.</h2>
+    </div>
+    <div class="grid-4" id="featuredGrid">
+      <!-- filled statically; mirrors DHM_PRODUCTS subset -->
+      <div class="product-card">
+        <div class="shot"><span class="tag">REF · EW-2026</span><div class="bottle"></div></div>
+        <div class="body"><span class="cat-tag">Laundry Solutions</span><h3>Ever White</h3><p>High-performance liquid detergent for hospital and hotel linen.</p>
+        <div class="card-foot"><a href="products.html" class="btn btn-outline btn-sm">View Details</a></div></div>
+      </div>
+      <div class="product-card">
+        <div class="shot"><span class="tag">REF · ES-2026</span><div class="bottle"></div></div>
+        <div class="body"><span class="cat-tag">Laundry Solutions</span><h3>Eco Soft</h3><p>Fabric conditioner that softens linen and neutralises odour.</p>
+        <div class="card-foot"><a href="products.html" class="btn btn-outline btn-sm">View Details</a></div></div>
+      </div>
+      <div class="product-card">
+        <div class="shot"><span class="tag">REF · CM-2026</span><div class="bottle"></div></div>
+        <div class="body"><span class="cat-tag">Laundry Solutions</span><h3>Chem Master</h3><p>pH-neutral additive that protects fabric and machine parts.</p>
+        <div class="card-foot"><a href="products.html" class="btn btn-outline btn-sm">View Details</a></div></div>
+      </div>
+      <div class="product-card">
+        <div class="shot"><span class="tag">REF · SS-2026</span><div class="bottle"></div></div>
+        <div class="body"><span class="cat-tag">Hospital Hygiene</span><h3>Safeshield</h3><p>Antimicrobial surgical scrub for pre-operative hand hygiene.</p>
+        <div class="card-foot"><a href="products.html" class="btn btn-outline btn-sm">View Details</a></div></div>
+      </div>
+    </div>
+    <div class="center-cta"><a href="products.html" class="btn btn-primary">View All Products</a></div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head center">
+      <p class="spec">Industries We Serve</p>
+      <h2>Wherever hygiene is non-negotiable.</h2>
+    </div>
+    <div class="industry-row">
+      <div class="industry-chip"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg><span>Hospitals</span></div>
+      <div class="industry-chip"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg><span>Hotels</span></div>
+      <div class="industry-chip"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M3 21V9l5-3 5 3v12M13 21V5l4-2 4 2v18"/></svg><span>Industries</span></div>
+      <div class="industry-chip"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3l9 4-9 4-9-4 9-4zM3 11l9 4 9-4M3 16l9 4 9-4"/></svg><span>Institutions</span></div>
+      <div class="industry-chip"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="13" r="7"/><path d="M6 5h2M16 5h2"/></svg><span>Commercial Laundry</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="container">
+    <div class="section-head">
+      <p class="spec">Testimonials</p>
+      <h2>What procurement teams tell us.</h2>
+    </div>
+    <div class="testi-track">
+      <div class="testi-card">
+        <span class="quote-mark">&ldquo;</span>
+        <p>Ever White has held up across our entire linen volume without a single batch inconsistency in three years of ordering.</p>
+        <div class="who"><b>Procurement Lead</b>200-bed multi-specialty hospital</div>
+      </div>
+      <div class="testi-card">
+        <span class="quote-mark">&ldquo;</span>
+        <p>The technical team helped us re-calibrate dosing on our laundry line, which cut our chemical spend without affecting wash quality.</p>
+        <div class="who"><b>Operations Manager</b>Hospitality group, South India</div>
+      </div>
+      <div class="testi-card">
+        <span class="quote-mark">&ldquo;</span>
+        <p>MSDS documentation is always ready when our compliance team asks for it. That alone has made DHM easy to keep working with.</p>
+        <div class="who"><b>Facilities Head</b>Institutional campus</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <div>
+      <h3>Need a quotation for your facility?</h3>
+      <p>Tell us your volume and we'll get back with pricing and dosage guidance.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="contact.html" class="btn btn-accent">Get In Touch</a>
+      <a href="tel:+918489884898" class="btn btn-outline on-dark">+91 84898 84898</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-about">
+      <div class="footer-logo"><span class="mark"><span style="color:#0B3D3A">DH</span></span>DHM</div>
+      <p>Dirt Hunter Molecules manufactures hospital hygiene, laundry and housekeeping solutions from Coimbatore, India, since 1996.</p>
+      <div class="social-row">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2.5l.5-3H14V9.5c0-.3.2-.5.5-.5z"/></svg></a>
+        <a href="#" aria-label="Instagram"><rect width="0" height="0"/><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="7" r="1"/><path d="M11 17v-4.5a2 2 0 014 0V17M11 10v7"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h5>Quick Links</h5>
+      <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="products.html">Products</a></li><li><a href="contact.html">Contact</a></li></ul>
+    </div>
+    <div>
+      <h5>Products</h5>
+      <ul><li><a href="products.html?cat=hospital">Hospital Hygiene</a></li><li><a href="products.html?cat=laundry">Laundry Solutions</a></li><li><a href="products.html?cat=housekeeping">Housekeeping</a></li></ul>
+    </div>
+    <div>
+      <h5>Stay Updated</h5>
+      <p style="font-size:13.5px;color:rgba(255,255,255,.6);margin-bottom:14px;">New formulations and facility tips, occasionally.</p>
+      <form class="newsletter" data-demo-form>
+        <input type="email" placeholder="Your email" required>
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© <span class="js-year"></span> Dirt Hunter Molecules. All rights reserved.</span>
+    <span>1/1 Railwaymens Colony, Kavundampalayam, Coimbatore – 641030</span>
+  </div>
+</footer>
+
+
+</div>
+<div class="page-root" data-page="about" style="display:none">
+
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <span class="mark"><span>DH</span></span>
+      <span>DHM<small>Dirt Hunter Molecules</small></span>
+    </a>
+    <nav class="nav-main">
+      <a href="index.html">Home</a>
+      <a href="about.html" class="active">About Us</a>
+      <a href="products.html">Products</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="header-cta">
+      <a href="tel:+918489884898" class="btn btn-outline btn-sm">Call Us</a>
+      <a href="contact.html" class="btn btn-accent btn-sm">Download Brochure</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="page-banner">
+  <div class="container">
+    <p class="crumb">Home / <b>About Us</b></p>
+    <h1>About Dirt Hunter Molecules</h1>
+    <p>Three decades of formulating hygiene products for the people who keep wards, kitchens and laundries running.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container split">
+    <div class="split-media">
+      <div class="drum">
+        <div class="label"><b>Est. 1996</b><span>Coimbatore, Tamil Nadu</span></div>
+      </div>
+    </div>
+    <div>
+      <p class="spec">Company Introduction</p>
+      <h2>A formulation house, not just a supplier.</h2>
+      <p>Dirt Hunter Molecules was founded in 1996 with a narrow focus: build cleaning and hygiene products that perform consistently in environments where there's no room for error — hospital wards, commercial kitchens and high-turnover laundries.</p>
+      <p>That focus has shaped everything since. Rather than reselling generic formulations, we develop, test and refine our own product lines across hospital hygiene, laundry care and housekeeping, backed by documentation our customers' compliance teams can rely on.</p>
+      <ul class="checklist">
+        <li><span class="tick">✓</span>In-house formulation and batch testing</li>
+        <li><span class="tick">✓</span>MSDS documentation on every product</li>
+        <li><span class="tick">✓</span>Direct technical support for procurement teams</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="container">
+    <div class="mv-grid">
+      <div class="mv-card">
+        <p class="spec">Mission</p>
+        <p class="statement">Deliver safe, effective and sustainable cleaning solutions to every facility that depends on us.</p>
+      </div>
+      <div class="mv-card alt">
+        <p class="spec">Vision</p>
+        <p class="statement">Become a trusted hygiene partner to hospitals, hotels and institutions, in India and beyond.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <p class="spec">Our Values</p>
+      <h2>What guides a formulation before it ships.</h2>
+    </div>
+    <div class="values-list">
+      <div class="value-card">
+        <span class="vnum">VAL.01</span>
+        <h4>Quality</h4>
+        <p>Every batch is checked against fixed specifications before it leaves the facility.</p>
+      </div>
+      <div class="value-card">
+        <span class="vnum">VAL.02</span>
+        <h4>Innovation</h4>
+        <p>Formulations are revisited as materials and facility needs change, not left static.</p>
+      </div>
+      <div class="value-card">
+        <span class="vnum">VAL.03</span>
+        <h4>Customer Satisfaction</h4>
+        <p>Our motto since 1996 — measured by repeat orders, not just first sales.</p>
+      </div>
+      <div class="value-card">
+        <span class="vnum">VAL.04</span>
+        <h4>Safety</h4>
+        <p>Clear directions, dosage guidance and MSDS sheets accompany every product line.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="container">
+    <div class="section-head">
+      <p class="spec">Why DHM</p>
+      <h2>Four reasons facilities stay with us.</h2>
+    </div>
+    <div class="value-grid">
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>
+        <h4>Professional products</h4>
+        <p>Formulated specifically for institutional use, not adapted from retail lines.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        <h4>Industry expertise</h4>
+        <p>Three decades working directly with hospital, hotel and laundry operations teams.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4V4z"/></svg>
+        <h4>Reliable support</h4>
+        <p>Dosage calibration and on-site guidance whenever a process needs adjusting.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+        <h4>Quality standards</h4>
+        <p>Consistent batch testing so the product performs the same way every order.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><path d="M6 5h2M16 5h2"/></svg>
+        <h4>Documentation ready</h4>
+        <p>MSDS and product specification sheets available on request, always current.</p>
+      </div>
+      <div class="value-cell">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 22c5-2 8-6 8-11V5l-8-3-8 3v6c0 5 3 9 8 11z"/></svg>
+        <h4>Sustainable where possible</h4>
+        <p>Biodegradable formulations used wherever performance isn't compromised.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <p class="spec">Certifications & Standards</p>
+      <h2>Documentation our customers can rely on.</h2>
+    </div>
+    <div class="cert-row">
+      <div class="cert-badge"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg><span>ISO-aligned QA process</span></div>
+      <div class="cert-badge"><svg class="ico" viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4V4z"/></svg><span>MSDS on every product</span></div>
+      <div class="cert-badge"><svg class="ico" viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg><span>Batch-tested formulations</span></div>
+      <div class="cert-badge"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>30 years of operation</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <div>
+      <h3>Want to see our quality documentation?</h3>
+      <p>Request MSDS sheets and specifications for any product line.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="contact.html" class="btn btn-accent">Get In Touch</a>
+      <a href="products.html" class="btn btn-outline on-dark">Browse Products</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-about">
+      <div class="footer-logo"><span class="mark"><span style="color:#0B3D3A">DH</span></span>DHM</div>
+      <p>Dirt Hunter Molecules manufactures hospital hygiene, laundry and housekeeping solutions from Coimbatore, India, since 1996.</p>
+      <div class="social-row">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2.5l.5-3H14V9.5c0-.3.2-.5.5-.5z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="7" r="1"/><path d="M11 17v-4.5a2 2 0 014 0V17M11 10v7"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h5>Quick Links</h5>
+      <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="products.html">Products</a></li><li><a href="contact.html">Contact</a></li></ul>
+    </div>
+    <div>
+      <h5>Products</h5>
+      <ul><li><a href="products.html?cat=hospital">Hospital Hygiene</a></li><li><a href="products.html?cat=laundry">Laundry Solutions</a></li><li><a href="products.html?cat=housekeeping">Housekeeping</a></li></ul>
+    </div>
+    <div>
+      <h5>Stay Updated</h5>
+      <p style="font-size:13.5px;color:rgba(255,255,255,.6);margin-bottom:14px;">New formulations and facility tips, occasionally.</p>
+      <form class="newsletter" data-demo-form>
+        <input type="email" placeholder="Your email" required>
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© <span class="js-year"></span> Dirt Hunter Molecules. All rights reserved.</span>
+    <span>1/1 Railwaymens Colony, Kavundampalayam, Coimbatore – 641030</span>
+  </div>
+</footer>
+
+
+</div>
+<div class="page-root" data-page="products" style="display:none">
+
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <span class="mark"><span>DH</span></span>
+      <span>DHM<small>Dirt Hunter Molecules</small></span>
+    </a>
+    <nav class="nav-main">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="products.html" class="active">Products</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="header-cta">
+      <a href="tel:+918489884898" class="btn btn-outline btn-sm">Call Us</a>
+      <a href="contact.html" class="btn btn-accent btn-sm">Download Brochure</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="page-banner">
+  <div class="container">
+    <p class="crumb">Home / <b>Products</b></p>
+    <h1>Our Products</h1>
+    <p>Search across hospital hygiene, laundry care and housekeeping lines, or filter by category.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+        <input type="text" id="productSearch" placeholder="Search products by name or use case…">
+      </div>
+      <div class="filter-tabs">
+        <button data-cat="all" class="active">All</button>
+        <button data-cat="hospital">Hospital</button>
+        <button data-cat="laundry">Laundry</button>
+        <button data-cat="housekeeping">Housekeeping</button>
+      </div>
+    </div>
+
+    <div class="grid-4" id="productGrid"><!-- rendered by js/products.js --></div>
+
+    <div class="empty-state" id="emptyState">
+      <p class="spec">No matches</p>
+      <h3>Nothing fits that search.</h3>
+      <p>Try a different keyword, or clear the category filter above.</p>
+    </div>
+
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <div>
+      <h3>Can't find the right product?</h3>
+      <p>Tell us your application and our technical team will recommend a formulation.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="contact.html" class="btn btn-accent">Send Inquiry</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-about">
+      <div class="footer-logo"><span class="mark"><span style="color:#0B3D3A">DH</span></span>DHM</div>
+      <p>Dirt Hunter Molecules manufactures hospital hygiene, laundry and housekeeping solutions from Coimbatore, India, since 1996.</p>
+      <div class="social-row">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2.5l.5-3H14V9.5c0-.3.2-.5.5-.5z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="7" r="1"/><path d="M11 17v-4.5a2 2 0 014 0V17M11 10v7"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h5>Quick Links</h5>
+      <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="products.html">Products</a></li><li><a href="contact.html">Contact</a></li></ul>
+    </div>
+    <div>
+      <h5>Products</h5>
+      <ul><li><a href="products.html?cat=hospital">Hospital Hygiene</a></li><li><a href="products.html?cat=laundry">Laundry Solutions</a></li><li><a href="products.html?cat=housekeeping">Housekeeping</a></li></ul>
+    </div>
+    <div>
+      <h5>Stay Updated</h5>
+      <p style="font-size:13.5px;color:rgba(255,255,255,.6);margin-bottom:14px;">New formulations and facility tips, occasionally.</p>
+      <form class="newsletter" data-demo-form>
+        <input type="email" placeholder="Your email" required>
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© <span class="js-year"></span> Dirt Hunter Molecules. All rights reserved.</span>
+    <span>1/1 Railwaymens Colony, Kavundampalayam, Coimbatore – 641030</span>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <div id="modalInner"></div>
+  </div>
+</div>
+
+
+</div>
+<div class="page-root" data-page="contact" style="display:none">
+
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <span class="mark"><span>DH</span></span>
+      <span>DHM<small>Dirt Hunter Molecules</small></span>
+    </a>
+    <nav class="nav-main">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="products.html">Products</a>
+      <a href="contact.html" class="active">Contact</a>
+    </nav>
+    <div class="header-cta">
+      <a href="tel:+918489884898" class="btn btn-outline btn-sm">Call Us</a>
+      <a href="contact.html" class="btn btn-accent btn-sm">Download Brochure</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="page-banner">
+  <div class="container">
+    <p class="crumb">Home / <b>Contact</b></p>
+    <h1>Get In Touch</h1>
+    <p>Send a product inquiry, request a brochure, or ask for MSDS documentation — our team replies within one business day.</p>
+  </div>
+</section>
+
+<section>
+  <div class="container contact-grid">
+
+    <div>
+      <div class="info-card">
+        <h3>Company Details</h3>
+        <div class="info-row">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 21s-7-4.35-7-10a7 7 0 0114 0c0 5.65-7 10-7 10z"/><circle cx="12" cy="11" r="2.4"/></svg>
+          <div><b>Address</b><span>1/1 Railwaymens Colony, Kavundampalayam, Coimbatore – 641030</span></div>
+        </div>
+        <div class="info-row">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 4h16v12H8l-4 4V4z"/></svg>
+          <div><b>Phone</b><span><a href="tel:+918489884898">+91 84898 84898</a></span></div>
+        </div>
+        <div class="info-row">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 5h16v14H4V5z"/><path d="M4 6l8 7 8-7"/></svg>
+          <div><b>Email</b><span><a href="mailto:dhm84898@gmail.com">dhm84898@gmail.com</a></span></div>
+        </div>
+        <div class="info-row">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <div><b>Working Hours</b><span>Mon–Sat, 9:30 AM – 6:30 PM IST</span></div>
+        </div>
+        <div class="social-row">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2.5l.5-3H14V9.5c0-.3.2-.5.5-.5z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="7" r="1"/><path d="M11 17v-4.5a2 2 0 014 0V17M11 10v7"/></svg></a>
+        </div>
+      </div>
+
+      <div class="map-box">
+        <div class="grid-lines"></div>
+        <div class="pin"></div>
+        <div class="cap">Kavundampalayam, Coimbatore – 641030</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="form-success" id="formSuccess">
+        <span>✓</span> Thanks — your inquiry has been received. We'll get back to you within one business day.
+      </div>
+      <form data-demo-form>
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your full name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@company.com" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" placeholder="+91 ">
+          </div>
+          <div class="field">
+            <label for="company">Company Name</label>
+            <input type="text" id="company" name="company" placeholder="Hospital, hotel or institution">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field full">
+            <label for="product">Product Interested In</label>
+            <select id="product" name="product">
+              <option value="">Select a product or category</option>
+              <option>Hospital Hygiene — Safeshield</option>
+              <option>Hospital Hygiene — SaniTouch</option>
+              <option>Hospital Hygiene — SurfaClean</option>
+              <option>Laundry Solutions — Ever White</option>
+              <option>Laundry Solutions — Eco Soft</option>
+              <option>Laundry Solutions — Chem Master</option>
+              <option>Housekeeping — RID Floor Cleaner</option>
+              <option>Housekeeping — Wealth Polish</option>
+              <option>Housekeeping — GlassPro</option>
+              <option>Not sure — please advise</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field full">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell us about your facility and requirements"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+        <p class="form-note">By submitting, you agree to be contacted regarding your inquiry. We don't share your details with third parties.</p>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="container">
+    <div class="section-head">
+      <p class="spec">FAQ</p>
+      <h2>Common questions before you order.</h2>
+    </div>
+    <div class="faq-list" style="max-width:760px;">
+      <div class="faq-item">
+        <button class="faq-q">Can products be customized?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Yes — fragrance, concentration and packaging size can be adjusted for larger institutional orders. Share your volume and use case with our technical team to start the conversation.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Do you provide MSDS sheets?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Every product ships with a current Material Safety Data Sheet. Request one for any product from this form or directly from the product detail page.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What industries do you serve?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Hospitals, hotels, industrial facilities, institutions and commercial laundry operations make up our core customer base, though our formulations suit any facility needing consistent hygiene standards.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">What is your minimum order quantity?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Minimums vary by product line. Mention your expected monthly volume in the inquiry form and we'll confirm pricing tiers along with the quotation.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">How long does delivery take?<span class="plus">+</span></button>
+        <div class="faq-a"><p>Standard orders within Tamil Nadu typically dispatch within 3–5 business days of confirmation. Other regions are quoted individually based on volume.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-about">
+      <div class="footer-logo"><span class="mark"><span style="color:#0B3D3A">DH</span></span>DHM</div>
+      <p>Dirt Hunter Molecules manufactures hospital hygiene, laundry and housekeeping solutions from Coimbatore, India, since 1996.</p>
+      <div class="social-row">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h2.5l.5-3H14V9.5c0-.3.2-.5.5-.5z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="7" r="1"/><path d="M11 17v-4.5a2 2 0 014 0V17M11 10v7"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h5>Quick Links</h5>
+      <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Us</a></li><li><a href="products.html">Products</a></li><li><a href="contact.html">Contact</a></li></ul>
+    </div>
+    <div>
+      <h5>Products</h5>
+      <ul><li><a href="products.html?cat=hospital">Hospital Hygiene</a></li><li><a href="products.html?cat=laundry">Laundry Solutions</a></li><li><a href="products.html?cat=housekeeping">Housekeeping</a></li></ul>
+    </div>
+    <div>
+      <h5>Stay Updated</h5>
+      <p style="font-size:13.5px;color:rgba(255,255,255,.6);margin-bottom:14px;">New formulations and facility tips, occasionally.</p>
+      <form class="newsletter" data-demo-form>
+        <input type="email" placeholder="Your email" required>
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© <span class="js-year"></span> Dirt Hunter Molecules. All rights reserved.</span>
+    <span>1/1 Railwaymens Colony, Kavundampalayam, Coimbatore – 641030</span>
+  </div>
+</footer>
+
+<script>
+  // pre-fill product field if arriving from a "View details" / "Inquire" link
+  const params = new URLSearchParams(window.location.search);
+  const product = params.get('product');
+  if (product) {
+    const select = document.getElementById('product');
+    let opt = [...select.options].find(o => o.text.includes(product));
+    if (opt) select.value = opt.value;
+  }
+</script>
+
+</div>
+
+<script>
+const DHM_PRODUCTS = [
+  {
+    id: 'ever-white',
+    name: 'Ever White',
+    full: 'Ever White Liquid Detergent',
+    category: 'laundry',
+    categoryLabel: 'Laundry Solutions',
+    ref: 'EW-2026',
+    short: 'High-performance liquid detergent for hospital and hospitality linen.',
+    description: 'A concentrated liquid detergent engineered for commercial laundry lines handling hospital and hotel linen. Formulated to lift organic stains while remaining gentle on fabric fibres over repeated wash cycles.',
+    benefits: ['Removes tough organic stains', 'Deep-cleans without fading colour', 'Disinfects fabric during the wash', 'Extends linen lifespan'],
+    applications: ['Hospitals', 'Hotels', 'Commercial laundry services'],
+    directions: 'Dose 20–40 ml per kg of dry linen depending on soil level. Add directly to the main wash at 40–60°C.',
+    storage: 'Store in a cool, dry place away from direct sunlight. Keep container tightly closed.'
+  },
+  {
+    id: 'eco-soft',
+    name: 'Eco Soft',
+    full: 'Eco Soft Fabric Conditioner',
+    category: 'laundry',
+    categoryLabel: 'Laundry Solutions',
+    ref: 'ES-2026',
+    short: 'Fabric conditioner that softens linen while neutralising residual odour.',
+    description: 'A biodegradable fabric conditioner formulated to leave linen soft to the touch and free of residual detergent odour, suited to high-turnover commercial laundries.',
+    benefits: ['Softens fabric in a single rinse', 'Neutralises detergent and odour residue', 'Reduces static and creasing', 'Biodegradable formulation'],
+    applications: ['Hotels', 'Hospitals', 'Institutional laundry'],
+    directions: 'Add 15–25 ml per kg of dry linen during the final rinse cycle.',
+    storage: 'Store between 10–30°C, away from heat sources. Shake before use.'
+  },
+  {
+    id: 'chem-master',
+    name: 'Chem Master',
+    full: 'Chem Master Neutral Care',
+    category: 'laundry',
+    categoryLabel: 'Laundry Solutions',
+    ref: 'CM-2026',
+    short: 'pH-neutral wash additive that protects fabric and machine components.',
+    description: 'A pH-balanced laundry additive that neutralises alkaline residue left by detergents, protecting both fabric fibres and washing machine components over time.',
+    benefits: ['Balances wash-water pH', 'Protects machine seals and drums', 'Prevents fabric yellowing', 'Compatible with all linen types'],
+    applications: ['Commercial laundry services', 'Hotels', 'Hospitals'],
+    directions: 'Add 10–15 ml per kg of dry linen in the neutralising rinse stage.',
+    storage: 'Store upright in a ventilated area. Avoid contact with strong acids.'
+  },
+  {
+    id: 'safeshield',
+    name: 'Safeshield',
+    full: 'Safeshield Surgical Hand Wash',
+    category: 'hospital',
+    categoryLabel: 'Hospital Hygiene',
+    ref: 'SS-2026',
+    short: 'Antimicrobial surgical scrub formulated for pre-operative hand hygiene.',
+    description: 'A broad-spectrum antimicrobial hand wash developed for surgical scrub routines, balancing fast-acting disinfection with everyday skin compatibility for repeated daily use.',
+    benefits: ['Broad-spectrum antimicrobial action', 'Dermatologically tested formulation', 'Fast residual protection', 'Low-irritation for repeated use'],
+    applications: ['Operation theatres', 'ICUs', 'Pre-operative scrub stations'],
+    directions: 'Apply 5 ml to wet hands, scrub for 60 seconds covering hands and forearms, rinse thoroughly.',
+    storage: 'Store below 30°C away from direct sunlight. Keep dispenser nozzle clean.'
+  },
+  {
+    id: 'sanitouch',
+    name: 'SaniTouch',
+    full: 'SaniTouch Instant Hand Sanitizer',
+    category: 'hospital',
+    categoryLabel: 'Hospital Hygiene',
+    ref: 'ST-2026',
+    short: 'Alcohol-based instant sanitizer for high-frequency hand hygiene points.',
+    description: 'A fast-drying, alcohol-based sanitizer designed for ward entrances, nursing stations and visitor touchpoints where frequent hand hygiene is required.',
+    benefits: ['Kills 99.9% of common germs', 'Fast-drying, non-sticky finish', 'Enriched with moisturiser', 'Suited to dispenser installations'],
+    applications: ['Hospital wards', 'Reception and visitor areas', 'Hotels'],
+    directions: 'Apply a coin-sized amount and rub hands together until dry, no rinsing required.',
+    storage: 'Flammable — store away from open flame and direct heat.'
+  },
+  {
+    id: 'surfaclean',
+    name: 'SurfaClean',
+    full: 'SurfaClean Surface Disinfectant',
+    category: 'hospital',
+    categoryLabel: 'Hospital Hygiene',
+    ref: 'SC-2026',
+    short: 'Hospital-grade disinfectant for beds, trolleys and high-touch surfaces.',
+    description: 'A hospital-grade disinfectant concentrate formulated to break down on hard, non-porous surfaces, suited to bed rails, trolleys and equipment between patient use.',
+    benefits: ['Effective against common pathogens', 'Non-corrosive to most surfaces', 'Quick contact-time formulation', 'Low residual odour'],
+    applications: ['Patient wards', 'Operation theatres', 'Equipment and trolleys'],
+    directions: 'Dilute 1:50 with water, apply to surface, allow 5 minutes contact time, wipe dry.',
+    storage: 'Store in original container, tightly sealed, away from direct sunlight.'
+  },
+  {
+    id: 'rid',
+    name: 'RID',
+    full: 'RID Floor Cleaner',
+    category: 'housekeeping',
+    categoryLabel: 'Housekeeping Solutions',
+    ref: 'RD-2026',
+    short: 'Concentrated floor cleaner for large-area daily housekeeping.',
+    description: 'A concentrated multi-surface floor cleaner formulated for daily mopping across large institutional and hospitality floor areas, cutting grease and grime without leaving residue.',
+    benefits: ['Cuts grease and grime fast', 'Leaves no sticky residue', 'Pleasant lasting fragrance', 'Safe on tile, vinyl and stone'],
+    applications: ['Hospitals', 'Hotels', 'Institutions and offices'],
+    directions: 'Dilute 30–50 ml per 5 litres of water for routine mopping.',
+    storage: 'Store in a cool, dry area. Keep cap tightly closed after use.'
+  },
+  {
+    id: 'wealth',
+    name: 'Wealth Polish',
+    full: 'Wealth Floor & Furniture Polish',
+    category: 'housekeeping',
+    categoryLabel: 'Housekeeping Solutions',
+    ref: 'WP-2026',
+    short: 'High-gloss polish for floors and wood furniture surfaces.',
+    description: 'A high-gloss polish formulated to restore shine to floors and wooden furniture in hotel lobbies and institutional common areas after routine cleaning.',
+    benefits: ['Restores high-gloss shine', 'Adds a protective surface layer', 'Resists fingerprints and dust', 'Pleasant residual fragrance'],
+    applications: ['Hotel lobbies', 'Institutions', 'Furniture and reception areas'],
+    directions: 'Apply a thin, even coat with a soft cloth or applicator, buff once dry.',
+    storage: 'Store upright, away from heat and direct sunlight.'
+  },
+  {
+    id: 'glasspro',
+    name: 'GlassPro',
+    full: 'GlassPro Glass & Surface Cleaner',
+    category: 'housekeeping',
+    categoryLabel: 'Housekeeping Solutions',
+    ref: 'GP-2026',
+    short: 'Streak-free cleaner for glass, mirrors and chrome fittings.',
+    description: 'A streak-free formulation for glass partitions, mirrors and chrome fittings common to hotel lobbies, hospital reception areas and institutional buildings.',
+    benefits: ['Streak-free finish', 'Fast evaporation, no wiping marks', 'Removes fingerprints and smudges', 'Safe on tinted and tempered glass'],
+    applications: ['Hotels', 'Hospitals', 'Offices and institutions'],
+    directions: 'Spray directly onto the surface and wipe with a clean, dry cloth or squeegee.',
+    storage: 'Store at room temperature, away from direct sunlight.'
+  }
+];
+
+</script>
+<script>
+
+/* ---- multi-page controller for single-file preview ---- */
+function dhmNavigate(targetHref){
+  const url = new URL(targetHref, window.location.href);
+  const page = url.pathname.split('/').pop().replace('.html','') || 'home';
+  const pageName = page === 'index' ? 'home' : page;
+  document.querySelectorAll('.page-root').forEach(p => {
+    p.style.display = (p.dataset.page === pageName) ? 'block' : 'none';
+  });
+  document.querySelectorAll('.page-root').forEach(p => {
+    p.querySelectorAll('.nav-main a').forEach(a => {
+      const ah = new URL(a.getAttribute('href'), window.location.href);
+      const ap = ah.pathname.split('/').pop().replace('.html','') || 'home';
+      a.classList.toggle('active', (ap === 'index' ? 'home' : ap) === pageName);
+    });
+  });
+  // handle products category param
+  if (pageName === 'products') {
+    const cat = url.searchParams.get('cat');
+    if (cat) {
+      const tabs = document.querySelectorAll('#page-products-tabs button, .page-root[data-page="products"] .filter-tabs button');
+      tabs.forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
+      window.__dhmActiveFilter = cat;
+      if (window.dhmRenderProducts) window.dhmRenderProducts();
+    }
+  }
+  // handle contact product prefill
+  if (pageName === 'contact') {
+    const product = url.searchParams.get('product');
+    if (product) {
+      const select = document.querySelector('.page-root[data-page="contact"] #product');
+      if (select) {
+        const opt = [...select.options].find(o => o.text.includes(product));
+        if (opt) select.value = opt.value;
+      }
+    }
+  }
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('a[href]').forEach(a => {
+    const href = a.getAttribute('href');
+    if (href && /^(index\.html|about\.html|products\.html|contact\.html)(\?.*)?$/.test(href)) {
+      a.dataset.dhmHref = href;
+      a.setAttribute('href', 'javascript:void(0)');
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        dhmNavigate(a.dataset.dhmHref);
+      });
+    }
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  // mobile nav toggle — scoped per header (one per page-root)
+  document.querySelectorAll('.site-header').forEach(header => {
+    const toggle = header.querySelector('.nav-toggle');
+    const nav = header.querySelector('.nav-main');
+    if (toggle && nav) {
+      toggle.addEventListener('click', () => {
+        nav.classList.toggle('open');
+        toggle.setAttribute('aria-expanded', nav.classList.contains('open'));
+      });
+      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+    }
+  });
+  document.querySelectorAll('.js-year').forEach(el => el.textContent = new Date().getFullYear());
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const q = item.querySelector('.faq-q');
+    if (!q) return;
+    q.addEventListener('click', () => {
+      const wasOpen = item.classList.contains('open');
+      item.closest('.faq-list')?.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  document.querySelectorAll('form[data-demo-form]').forEach(form => {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const success = form.querySelector('.form-success') || form.parentElement.querySelector('.form-success');
+      if (success) {
+        success.classList.add('show');
+        success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      form.reset();
+    });
+  });
+});
+
+</script>
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document.querySelector('.page-root[data-page="products"]');
+  if (!root) return;
+  const grid = root.querySelector('#productGrid');
+  const empty = root.querySelector('#emptyState');
+  const searchInput = root.querySelector('#productSearch');
+  const tabs = root.querySelectorAll('.filter-tabs button');
+  const overlay = root.querySelector('#productModal');
+  const modalInner = root.querySelector('#modalInner');
+  const modalClose = root.querySelector('#modalClose');
+
+  window.__dhmActiveFilter = window.__dhmActiveFilter || 'all';
+  let activeQuery = '';
+
+  function cardTemplate(p) {
+    return `
+      <article class="product-card" data-id="${p.id}">
+        <div class="shot">
+          <span class="tag">REF · ${p.ref}</span>
+          <div class="bottle"></div>
+        </div>
+        <div class="body">
+          <span class="cat-tag">${p.categoryLabel}</span>
+          <h3>${p.full}</h3>
+          <p>${p.short}</p>
+          <div class="card-foot">
+            <button class="btn btn-outline btn-sm js-view" data-id="${p.id}">View details</button>
+            <a href="contact.html?product=${encodeURIComponent(p.full)}" class="arrow-link">Inquire →</a>
+          </div>
+        </div>
+      </article>`;
+  }
+
+  function render() {
+    const activeFilter = window.__dhmActiveFilter;
+    const filtered = DHM_PRODUCTS.filter(p => {
+      const matchesCat = activeFilter === 'all' || p.category === activeFilter;
+      const matchesQuery = !activeQuery || (p.full + ' ' + p.short).toLowerCase().includes(activeQuery);
+      return matchesCat && matchesQuery;
+    });
+    grid.innerHTML = filtered.map(cardTemplate).join('');
+    empty.classList.toggle('show', filtered.length === 0);
+    grid.querySelectorAll('.js-view').forEach(btn => {
+      btn.addEventListener('click', () => openModal(btn.dataset.id));
+    });
+  }
+  window.dhmRenderProducts = render;
+
+  tabs.forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.cat === window.__dhmActiveFilter);
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      window.__dhmActiveFilter = tab.dataset.cat;
+      render();
+    });
+  });
+
+  searchInput?.addEventListener('input', e => {
+    activeQuery = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  function openModal(id) {
+    const p = DHM_PRODUCTS.find(x => x.id === id);
+    if (!p) return;
+    modalInner.innerHTML = `
+      <div class="modal-grid">
+        <div class="modal-shot"><div class="bottle"></div></div>
+        <div class="modal-body">
+          <span class="cat-tag">${p.categoryLabel} · REF ${p.ref}</span>
+          <h2>${p.full}</h2>
+          <div class="modal-section"><h5>Description</h5><p>${p.description}</p></div>
+          <div class="modal-section"><h5>Benefits</h5><ul>${p.benefits.map(b => `<li>${b}</li>`).join('')}</ul></div>
+          <div class="modal-section"><h5>Applications</h5><ul>${p.applications.map(a => `<li>${a}</li>`).join('')}</ul></div>
+          <div class="modal-section"><h5>Directions to use</h5><p>${p.directions}</p></div>
+          <div class="modal-section"><h5>Storage information</h5><p>${p.storage}</p></div>
+          <div class="modal-actions">
+            <button class="btn btn-primary js-download">Download brochure</button>
+            <a href="contact.html?product=${encodeURIComponent(p.full)}" class="btn btn-accent">Send inquiry</a>
+          </div>
+        </div>
+      </div>`;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    modalInner.querySelector('.js-download')?.addEventListener('click', () => {
+      alert('Brochure download is available once connected to the document library.');
+    });
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  modalClose?.addEventListener('click', closeModal);
+  overlay?.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  render();
+});
+
+</script>
+</body>
+</html>
